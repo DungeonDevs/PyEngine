@@ -23,12 +23,16 @@ my_map = (
 	(None, player, None)
 	)
 
+<<<<<<< HEAD
 engine = Engine((1200, 800), my_map)
 
 # sets the ground under each field where ground needs to be shown
 ground = RenderObject()
 engine.setGround(ground)
 
+=======
+engine = Engine((1000, 400), my_map)
+>>>>>>> 1ba60d9f579c6e69865015cb155aae1d33ece370
 engine.startUp()
 
 engine.render()
