@@ -34,11 +34,13 @@ class Engine(object):
 			for z in range(len(self.__map[0])):
 				obj = self.__map[x][z]
 				if not obj == None:
-					obj.render(x, 0, z)
-
 					if obj.getGroundNecessary(): # render ground under object
-												 # if needed
+												 # if needed - has to be first
+												 # to be overlapped by the
+												 # object itself
 						self.getGround().render(x, -1, z)
+
+					obj.render(x, 0, z)
 				else: # render ground underneath if no object
 					self.getGround().render(x, -1, z)
 

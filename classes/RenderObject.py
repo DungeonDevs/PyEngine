@@ -3,7 +3,7 @@ from OpenGL.GL import *
 class RenderObject(object):
 
 
-	STANDARD_CUBE_VERTS = (
+	STANDARD_VERTS = (
 		(0.5, -0.5, -0.5),
 		(0.5, 0.5, -0.5),
 		(-0.5, 0.5, -0.5),
@@ -15,7 +15,7 @@ class RenderObject(object):
 		)
 
 
-	STANDARD_CUBE_EDGES = (
+	STANDARD_EDGES = (
 		(0, 1),
 		(0, 3),
 		(0, 4),
@@ -30,32 +30,67 @@ class RenderObject(object):
 		(5, 7)
 		)
 
+	STANDARD_FACES = (
+		(0, 1, 2, 3),
+		(3, 2, 7, 6),
+		(6, 7, 5, 4),
+		(4, 5, 1, 0),
+		(1, 5, 7, 2),
+		(4, 0, 3, 6)
+		)
 
-	def __init__(self, vertices = STANDARD_CUBE_VERTS, edges = STANDARD_CUBE_EDGES):
+	STANDARD_COLOR = ( 156 / 255, 18 / 255, 160 / 255 )
+
+
+	def __init__(self, vertices = STANDARD_VERTS, edges = STANDARD_EDGES, faces = STANDARD_FACES, color = STANDARD_COLOR):
 		self.__vertices = vertices
 		self.__edges = edges
+		self.__faces = faces
+		self.__color = color
 
 		self.__groundNecessary = True
+		self.__renderAsEdges = False
 
 
 	def render(self, x, y, z):
-		glBegin(GL_LINES)
-
 		print("RenderObject at " + str(x) + " : " + str(z))
 
-		for edge in self.__edges:
-			for vertex in edge:
-				glVertex3fv((self.__vertices[vertex][0] + x, self.__vertices[vertex][1] + y, self.__vertices[vertex][2] + z))
+		if self.__renderAsEdges:
+			glBegin(GL_LINES)
 
-		glEnd()
+			glColor3fv(self.__color)
+
+			for edge in self.__edges:
+				for vertex in edge:
+					glVertex3fv((self.__vertices[vertex][0] + x, self.__vertices[vertex][1] + y, self.__vertices[vertex][2] + z))
+
+			glEnd()
+		else:
+			glBegin(GL_QUADS)
+
+			glColor3fv(self.__color)
+
+			for face in self.__faces:
+				for vertex in face:
+					glVertex3fv((self.__vertices[vertex][0] + x, self.__vertices[vertex][1] + y, self.__vertices[vertex][2] + z))
+
+			glEnd()
 
 
 	def getGroundNecessary(self):
 		return self.__groundNecessary
 
 
-	def setGroundNecessary(self, isNecessary):
+	def setGroundNecessary(self, isNecessary = True):
 		self.__groundNecessary = isNecessary
+
+
+	def getRenderAsEdges(self):
+		return self.__renderAsEdges
+
+
+	def setRenderAsEdges(self, renderAsEdges = True):
+		self.__renderAsEdges = renderAsEdges
 
 
 	def getVertices(self):
@@ -72,3 +107,19 @@ class RenderObject(object):
 
 	def setEdges(self, edges):
 		self.__edges = edges
+
+
+	def getFaces(self):
+		return self.__faces
+
+
+	def setEdges(self, faces):
+		self.__faces = faces
+
+
+	def getColor(self):
+		return self.__color
+
+
+	def setColor(self, color):
+		self.__color = color

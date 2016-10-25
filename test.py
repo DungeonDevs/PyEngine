@@ -6,40 +6,38 @@ import pygame
 
 # start code
 
+# create three cubes as objects in the game
 leftCube = RenderObject()
 leftCube.setGroundNecessary(False)
+leftCube.setRenderAsEdges()
 
 middleCube = RenderObject()
 middleCube.setGroundNecessary(False)
+middleCube.setRenderAsEdges()
 
 rightCube = RenderObject()
 rightCube.setGroundNecessary(False)
+rightCube.setRenderAsEdges()
 
+# create a player
 player = PlayerObject()
-
-my_map = (
-	(None, None, None),
-	(leftCube, middleCube, rightCube),
-	(None, player, None)
-	)
-
-engine = Engine((1000, 400), my_map)
-
-# sets the ground under each field where ground needs to be shown
-ground = RenderObject()
-engine.setGround(ground)
-
-engine.startUp()
-
-engine.render()
+player.setColor((100/255, 200/255, 100/255))
 
 my_map = (
 	(leftCube, None, None),
 	(None, middleCube, None),
 	(None, player, rightCube)
 	)
-engine.setMap(my_map)
 
+engine = Engine((1000, 400), my_map)
+
+# sets the ground under each field where ground needs to be shown
+ground = RenderObject()
+ground.setColor((150/255, 75/255, 0))
+engine.setGround(ground)
+
+# start engine and render first screen
+engine.startUp()
 engine.render()
 
 # move this into engine "somehow"
