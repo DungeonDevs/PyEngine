@@ -36,17 +36,16 @@ class RenderObject(object):
 		self.__edges = edges
 
 
-	def render(self, x, y):
+	def render(self, x=0, y=0, z=0):
 		glBegin(GL_LINES)
 
 		print("RenderObject at " + str(x) + " : " + str(y))
 
 		for edge in self.__edges:
 			for vertex in edge:
-				glVertex3fv((self.__vertices[vertex][0] + y, self.__vertices[vertex][1], self.__vertices[vertex][2] + x))
+				glVertex3fv((self.__vertices[vertex][0] + x, self.__vertices[vertex][1]+y, self.__vertices[vertex][2] + z))
 
 		glEnd()
-
 
 	def getVertices(self):
 		return self.__vertices

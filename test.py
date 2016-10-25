@@ -15,7 +15,7 @@ my_map = (
 	(None, None, None)
 	)
 
-engine = Engine((1200, 800), my_map)
+engine = Engine((1000, 400), my_map)
 engine.startUp()
 
 engine.render()

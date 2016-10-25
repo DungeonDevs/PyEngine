@@ -29,11 +29,11 @@ class Engine(object):
 
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
 
-		for y in range(len(self.__map)):
+		for z in range(len(self.__map)):
 			for x in range(len(self.__map[0])):
-				obj = self.__map[x][y]
+				obj = self.__map[x][z]
 				if not obj == None:
-					obj.render(x, y)
+					obj.render(x=x, y=0,z=z)
 					#if obj
 
 		#
