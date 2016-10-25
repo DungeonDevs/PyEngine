@@ -35,17 +35,27 @@ class RenderObject(object):
 		self.__vertices = vertices
 		self.__edges = edges
 
+		self.__groundNecessary = True
 
-	def render(self, x, y):
+
+	def render(self, x, y, z):
 		glBegin(GL_LINES)
 
-		print("RenderObject at " + str(x) + " : " + str(y))
+		print("RenderObject at " + str(x) + " : " + str(z))
 
 		for edge in self.__edges:
 			for vertex in edge:
-				glVertex3fv((self.__vertices[vertex][0] + y, self.__vertices[vertex][1], self.__vertices[vertex][2] + x))
+				glVertex3fv((self.__vertices[vertex][0] + x, self.__vertices[vertex][1] + y, self.__vertices[vertex][2] + z))
 
 		glEnd()
+
+
+	def getGroundNecessary(self):
+		return self.__groundNecessary
+
+
+	def setGroundNecessary(self, isNecessary):
+		self.__groundNecessary = isNecessary
 
 
 	def getVertices(self):

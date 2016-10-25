@@ -1,21 +1,34 @@
 from Engine import *
 from classes.RenderObject import *
+from classes.PlayerObject import *
 
 import pygame
 
 # start code
 
 leftCube = RenderObject()
+leftCube.setGroundNecessary(False)
+
 middleCube = RenderObject()
+middleCube.setGroundNecessary(False)
+
 rightCube = RenderObject()
+rightCube.setGroundNecessary(False)
+
+player = PlayerObject()
 
 my_map = (
 	(None, None, None),
 	(leftCube, middleCube, rightCube),
-	(None, None, None)
+	(None, player, None)
 	)
 
 engine = Engine((1200, 800), my_map)
+
+# sets the ground under each field where ground needs to be shown
+ground = RenderObject()
+engine.setGround(ground)
+
 engine.startUp()
 
 engine.render()
@@ -23,7 +36,7 @@ engine.render()
 my_map = (
 	(leftCube, None, None),
 	(None, middleCube, None),
-	(None, None, rightCube)
+	(None, player, rightCube)
 	)
 engine.setMap(my_map)
 

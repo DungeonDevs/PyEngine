@@ -21,7 +21,8 @@ class Engine(object):
 		aspectRatio = self.__display[0] / self.__display[1]
 		gluPerspective(fieldOfView, aspectRatio, 0.1, 50.0)
 
-		glTranslatef(-1, -2, -10)
+		# x, y, z -> y is fixed - x, -2, y (in-game)
+		glTranslatef(-1, -1, -10)
 		glRotatef(0, 0, 0, 0)
 
 
@@ -29,12 +30,17 @@ class Engine(object):
 
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
 
-		for y in range(len(self.__map)):
-			for x in range(len(self.__map[0])):
-				obj = self.__map[x][y]
+		for x in range(len(self.__map)):
+			for z in range(len(self.__map[0])):
+				obj = self.__map[x][z]
 				if not obj == None:
-					obj.render(x, y)
-					#if obj
+					obj.render(x, 0, z)
+
+					if obj.getGroundNecessary(): # render ground under object
+												 # if needed
+						self.getGround().render(x, -1, z)
+				else: # render ground underneath if no object
+					self.getGround().render(x, -1, z)
 
 		#
 		# update is better, but does not work.
@@ -47,3 +53,11 @@ class Engine(object):
 
 	def setMap(self, p_map):
 		self.__map = p_map
+
+
+	def getGround(self):
+		return self.__ground
+
+
+	def setGround(self, ground):
+		self.__ground = ground
