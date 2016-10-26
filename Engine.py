@@ -65,8 +65,6 @@ class Engine(object):
 
 		# initialize vars by standards
 		self.debug = False
-		self.__cameraPosition = (0, 0, 0)
-		self.__rotation = PlayerObject.NORTH
 
 
 	#
@@ -82,9 +80,6 @@ class Engine(object):
 		aspectRatio = self.__display[0] / self.__display[1]
 		gluPerspective(fieldOfView, aspectRatio, 0.1, 50.0)
 
-		self.setCameraPosition(0, 0, 0)
-		self.turnCameraInDirection(PlayerObject.NORTH)
-
 
 	#
 	# This function renders the current map with the RenderObject it contains
@@ -99,15 +94,10 @@ class Engine(object):
 				obj = self.__map[x][z]
 				# print("+1 lookup")
 				if (not obj == None) and isinstance(obj, PlayerObject):
-					self.setCameraPosition(x, -2, z)
-					self.turnCameraInDirection(obj.getViewDirection())
+					self.setCameraPosition(x, z, obj.getViewDirection())
 
 		# Clear the OpenGL screen
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
-
-		# get the current position of the camera to position objects
-		# accordingly.
-		camPos = self.getCameraPosition()
 
 		# Display all RenderObjects in the map
 		for x in range(len(self.__map)):
@@ -118,11 +108,11 @@ class Engine(object):
 												 # if needed - has to be first
 												 # to be overlapped by the
 												 # object itself
-						self.getGround().render(x - camPos[0], -1 - camPos[1], z - camPos[2])
+						self.getGround().render(x, -1, z)
 
-					obj.render(x - camPos[0], 0 - camPos[1], z - camPos[2])
+					obj.render(x, 0, z)
 				else: # render ground underneath if no object
-					self.getGround().render(x - camPos[0], -1 - camPos[1], z - camPos[2])
+					self.getGround().render(x, -1, z)
 
 		# in case debug is set to true, display the axis (x, y, z)
 		if self.debug:
@@ -143,38 +133,45 @@ class Engine(object):
 	#
 	# Moves the camera to the desired absolute position in space.
 	#
-	# @param x : The x-coordinate to move the camera to.
-	# @param y : The y-coordinate to move the camera to.
-	# @param z : The z-coordinate to move the camera to.
-	def setCameraPosition(self, x, y, z):
-		print("Set Camera to " + str(x) + " : " + str(y) + " : " + str(z))
-
-		# reset camera to 0, 0, 0
-		oldPos = self.getCameraPosition()
-		glTranslatef(-oldPos[0], -oldPos[1], -oldPos[2]) # minus 'cause it moves back
-
-		# move camera to given coords
-		glTranslatef(x, y, z)
-
-
+	# @param x : The x-coordinate of the player to see in third-person.
+	# @param z : The z-coordinate of the player to see in third-person.
+	# @param direction : The direction the player to see in third-person is
+	# 					 looking in.
 	#
-	# Return the camera's position as coordinate-list: (x, y, z)
-	#
-	def getCameraPosition(self):
-		return self.__cameraPosition
+	def setCameraPosition(self, x, z, direction):
+		print("Set Camera to " + str(x) + " : " + str(z) + " > " +
+				str(direction))
 
+		# --------------------
+		# camera position
+		eX = x + 7 + 0.5
+		eY = 3
+		eZ = z + 0.5
 
-	#
-	# Turn the camera in the desired direction. This takes care of angling the
-	# camera slightly downwards etc. for looking at the player in third-person
-	# perspective.
-	#
-	# @param direction : One of the four directions specified as constants in
-	# 					 PlayerObject. (NORTH, EAST, SOUTH, WEST)
-	#
-	def turnCameraInDirection(self, direction):
-		direction = direction % 4 # make sure it's a valid direction
-		print("Turning camera in direction: " + str(direction))
+		# --------------------
+		# looking at
+		cY = eY - 1
+
+		if direction == PlayerObject.NORTH:
+			# looking at
+			cX = eX - 5
+			cZ = eZ
+		elif direction == PlayerObject.SOUTH:
+			# looking at
+			cX = eX + 5
+			cZ = eZ
+		elif direction == PlayerObject.EAST:
+			# looking at
+			cX = eX
+			cZ = eZ - 5
+		elif direction == PlayerObject.WEST:
+			# looking at
+			cX = eX
+			cZ = eZ + 5
+
+		# --------------------
+		# make it happen
+		gluLookAt(eX, eY, eZ, cX, cY, cZ, 0, 1, 0)
 
 
 	#
