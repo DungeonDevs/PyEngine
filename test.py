@@ -4,6 +4,7 @@ from classes.PlayerObject import *
 
 import pygame
 
+#------------------------------------------------
 # start code
 
 # create three cubes as objects in the game
@@ -21,15 +22,31 @@ rightCube.setRenderAsEdges()
 
 # create a player
 player = PlayerObject()
+player.setViewDirection(PlayerObject.NORTH)
 player.setColor((100/255, 200/255, 100/255))
 
+#--------------------------------------
+# create map
 my_map = (
 	(leftCube, None, None),
 	(None, middleCube, None),
-	(None, player, rightCube)
+	(None, None, rightCube),
+	(None, None, None),
+	(None, None, None),
+	(None, None, None),
+	(None, None, None),
+	(None, None, None),
+	(None, None, None),
+	(None, None, None),
+	(None, None, None),
+	(None, None, None),
+	(None, player, None),
 	)
+#--------------------------------------
 
-engine = Engine((1000, 400), my_map)
+# create engine object
+engine = Engine((1800, 1000), my_map)
+engine.debug = True # to show axis
 
 # sets the ground under each field where ground needs to be shown
 ground = RenderObject()
@@ -46,4 +63,9 @@ while True:
 		if event.type == pygame.QUIT:
 			pygame.quit()
 
-	pygame.time.wait(100)
+	# glRotatef(1, 1, 0, 0) # x
+	# glRotatef(1, 0, 1, 0) # y
+	# glRotatef(1, 0, 0, 1) # z
+	# engine.render()
+
+	pygame.time.wait(10)
