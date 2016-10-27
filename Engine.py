@@ -22,21 +22,21 @@ class Engine(object):
 	__axis = (
 		# x-axis
 		RenderObject(
-			((-200,0,0), (200,0,0)), # vertices
+			((-1,0,0), (200,0,0)), # vertices
 			((0,1), (1,0)), # edges (two, because else it isn't correct syntax)
 			(), # no faces
 			(1,0,0) # color : red
 			),
 		# y-axis
 		RenderObject(
-			((0,-200,0), (0,200,0)), # vertices
+			((0,-1,0), (0,200,0)), # vertices
 			((0,1), (1,0)), # edges (two, because else it isn't correct syntax)
 			(), # no faces
 			(0,1,0) # color : green
 			),
 		# z-axis
 		RenderObject(
-			((0,0,-200), (0,0,200)), # vertices
+			((0,0,-1), (0,0,200)), # vertices
 			((0,1), (1,0)), # edges (two, because else it isn't correct syntax)
 			(), # no faces
 			(0,0,1) # color : blue
@@ -65,6 +65,8 @@ class Engine(object):
 
 		# initialize vars by standards
 		self.debug = False
+		self.__camera = ((0, 0, 0), # eX eY eZ
+						 (0, 0, 0)) # cX cY cZ
 
 
 	#
@@ -80,6 +82,9 @@ class Engine(object):
 		aspectRatio = self.__display[0] / self.__display[1]
 		gluPerspective(fieldOfView, aspectRatio, 0.1, 50.0)
 
+		# things in the back are covered by things in front of them
+		glEnable(GL_DEPTH_TEST)
+
 
 	#
 	# This function renders the current map with the RenderObject it contains
@@ -87,18 +92,45 @@ class Engine(object):
 	# To avoid unwanted behaviour please only include one PlayerObject.
 	#
 	def render(self):
+		# Clear OpenGL
+		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
+
+		# glMatrixMode(GL_PROJECTION)
+		# glLoadIdentity()
+		# set Camera position
+		self.setCamera3rdPerson()
+
+		# glMatrixMode(GL_MODELVIEW)
+		# render the objects in the map and ground where needed
+		self.renderAllObjects()
+
+		#
+		# update is better, but does not work.
+		# flip sadly produces an error on closing, but that is acceptable,
+		# as the user does not notice this.
+		#
+		# pygame.display.update()
+		pygame.display.flip()
+
+
+	#
+	# Sets the camera to the correct position depending on where the player is
+	#
+	def setCamera3rdPerson(self):
 		# find player and set camera accordingly
 		# !inefficient!
 		for x in range(len(self.__map)):
 			for z in range(len(self.__map[0])):
 				obj = self.__map[x][z]
 				# print("+1 lookup")
-				if (not obj == None) and isinstance(obj, PlayerObject):
+				if isinstance(obj, PlayerObject):
 					self.setCameraPosition(x, z, obj.getViewDirection())
 
-		# Clear the OpenGL screen
-		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
 
+	#
+	# Renders the objects in the current map to OpenGL and ground where needed.
+	#
+	def renderAllObjects(self):
 		# Display all RenderObjects in the map
 		for x in range(len(self.__map)):
 			for z in range(len(self.__map[0])):
@@ -121,14 +153,6 @@ class Engine(object):
 				axis.setGroundNecessary(False)
 				axis.render(0, 0, 0)
 
-		#
-		# update is better, but does not work.
-		# flip sadly produces an error on closing, but that is acceptable,
-		# as the user does not notice this.
-		#
-		# pygame.display.update()
-		pygame.display.flip()
-
 
 	#
 	# Moves the camera to the desired absolute position in space.
@@ -142,35 +166,76 @@ class Engine(object):
 		print("Set Camera to " + str(x) + " : " + str(z) + " > " +
 				str(direction))
 
-		# --------------------
-		# camera position
-		eX = x + 7 + 0.5
-		eY = 3
-		eZ = z + 0.5
+		# # camera position
+		# eY = 3 - self.__camera[0][1]
+		#
+		# # looking at
+		# cY = eY - 1 - self.__camera[1][1] # slightly downwards
+		#
+		# if direction == PlayerObject.NORTH:
+		# 	# camera position
+		# 	eX = x + 7.5 - self.__camera[0][0]
+		# 	eZ = z + 0.5 - self.__camera[0][2]
+		#
+		# 	# looking at
+		# 	cX = eX - 5 - self.__camera[1][0]
+		# 	cZ = eZ - self.__camera[1][2]
+		# elif direction == PlayerObject.SOUTH:
+		# 	# camera position
+		# 	eX = x - 7.5 - self.__camera[0][0]
+		# 	eZ = z + 0.5 - self.__camera[0][2]
+		#
+		# 	# looking at
+		# 	cX = eX + 5 - self.__camera[1][0]
+		# 	cZ = eZ - self.__camera[1][2]
+		# elif direction == PlayerObject.EAST:
+		# 	# camera position
+		# 	eX = x + 0.5 - self.__camera[0][0]
+		# 	eZ = z + 7.5 - self.__camera[0][2]
+		#
+		# 	# looking at
+		# 	cX = eX - self.__camera[1][0]
+		# 	cZ = eZ - 5 - self.__camera[1][2]
+		# elif direction == PlayerObject.WEST:
+		# 	# camera position
+		# 	eX = x + 0.5 - self.__camera[0][0]
+		# 	eZ = z - 7.5 - self.__camera[0][2]
+		#
+		# 	# looking at
+		# 	cX = eX - self.__camera[1][0]
+		# 	cZ = eZ + 5 - self.__camera[1][2]
 
-		# --------------------
-		# looking at
-		cY = eY - 1
+		if not self.stopper:
+			eX = 12 + 7.5
+			eY = 0 + 3
+			eZ = 1 + 0.5
+			cX = 12 + 0.5
+			cY = 0 + 1
+			cZ = 1 + 0.5
 
-		if direction == PlayerObject.NORTH:
-			# looking at
-			cX = eX - 5
-			cZ = eZ
-		elif direction == PlayerObject.SOUTH:
-			# looking at
-			cX = eX + 5
-			cZ = eZ
-		elif direction == PlayerObject.EAST:
-			# looking at
-			cX = eX
-			cZ = eZ - 5
-		elif direction == PlayerObject.WEST:
-			# looking at
-			cX = eX
-			cZ = eZ + 5
+			self.stopper = True
+		else:
+			# eX = 0
+			# eY = 0
+			# eZ = 0
+			# cX = 0
+			# cY = 0
+			# cZ = 0
+
+			eX = 12 + 7.5
+			eY = 0 + 3
+			eZ = 1 + 0.5
+			cX = 12 + 0.5
+			cY = 0 + 1
+			cZ = 1 + 0.5
 
 		# --------------------
 		# make it happen
+		self.__camera = ((eX, eY, eZ),
+						 (cX, cY, cZ))
+		print(str(eX) + " " + str(eY) + " " + str(eZ) + " " + str(cX) + " " +
+				str(cY) + " " + str(cZ))
+
 		gluLookAt(eX, eY, eZ, cX, cY, cZ, 0, 1, 0)
 
 

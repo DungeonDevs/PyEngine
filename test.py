@@ -54,18 +54,16 @@ ground.setColor((150/255, 75/255, 0))
 engine.setGround(ground)
 
 # start engine and render first screen
+engine.stopper = False # for debugging
 engine.startUp()
 engine.render()
+pygame.time.wait(1000)
+engine.render()
 
-# move this into engine "somehow"
 while True:
+	# TODO: give engine this functionality
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			pygame.quit()
-
-	# glRotatef(1, 1, 0, 0) # x
-	# glRotatef(1, 0, 1, 0) # y
-	# glRotatef(1, 0, 0, 1) # z
-	# engine.render()
 
 	pygame.time.wait(10)

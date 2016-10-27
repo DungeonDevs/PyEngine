@@ -100,7 +100,7 @@ class RenderObject(object):
 	# @param z : The z-coord at which the object shall be rendered
 	#
 	def render(self, x, y, z):
-		print("RenderObject at " + str(x) + " : " + str(z))
+		# print("RenderObject at " + str(x) + " : " + str(z))
 
 		if self.__renderAsEdges: # the object is set to render only it's edges
 			glBegin(GL_LINES) # set the GL-mode to line-drawing
