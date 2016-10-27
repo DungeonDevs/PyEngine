@@ -65,8 +65,6 @@ class Engine(object):
 
 		# initialize vars by standards
 		self.debug = False
-		self.__camera = ((0, 0, 0), # eX eY eZ
-						 (0, 0, 0)) # cX cY cZ
 
 
 	#
@@ -103,7 +101,13 @@ class Engine(object):
 		glLoadIdentity()
 
 		# set Camera position
-		self.setCamera3rdPerson()
+		# TODO: inefficient - use parameter?
+		for x in range(len(self.__map)):
+			for z in range(len(self.__map[0])):
+				obj = self.__map[x][z]
+				# print("+1 lookup")
+				if isinstance(obj, PlayerObject):
+					self.setCamera3rdPerson(x, z, obj.getViewDirection())
 
 		# render the objects in the map and ground where needed
 		self.renderAllObjects()
@@ -147,43 +151,28 @@ class Engine(object):
 	#
 	# Sets the camera to the correct position depending on where the player is
 	#
-	def setCamera3rdPerson(self):
-		# find player and set camera accordingly
-		# !inefficient!
-		for x in range(len(self.__map)):
-			for z in range(len(self.__map[0])):
-				obj = self.__map[x][z]
-				# print("+1 lookup")
-				if isinstance(obj, PlayerObject):
-					# self.setCameraPosition(x, z, obj.getViewDirection())
-					eyeV    = [0,0,0] # cam position
-					centerV = [0,0,0] # lookat point
-					upV     = [0,1,0] # up vector
-					playerV = [x,0,z] # player position
+	def setCamera3rdPerson(self, x, z, direction):
+		dY = 1
+		dBack = 3
 
-					if not self.stopper:
-						eyeV[0] = playerV[0] + 7.5
-						eyeV[1] = playerV[1] + 3
-						eyeV[2] = playerV[2] + 0.5
-						centerV[0] = playerV[0] + 0.5
-						centerV[1] = playerV[1] + 1
-						centerV[2] = playerV[2] + 0.5
+		# initialize vars
+		playerV = [x,0,z] # player position
+		eyeV    = playerV[:] # cam position (moving it starts at the player)
+		centerV = playerV[:] # lookat point (is player)
+		upV     = [0,1,0] # up vector
 
-						self.stopper = True
-					else:
-						eyeV[0] = playerV[0] + 7.5
-						eyeV[1] = playerV[1] + 3
-						eyeV[2] = playerV[2] + 0.5
-						centerV[0] = playerV[0] + 0.5
-						centerV[1] = playerV[1] + 1
-						centerV[2] = playerV[2] + 0.5
+		eyeV[1] += dY
 
-					# if obj.getViewDirection() == PlayerObject.NORTH:
-					# elif obj.getViewDirection() == PlayerObject.SOUTH:
-					# elif obj.getViewDirection() == PlayerObject.EAST:
-					# elif obj.getViewDirection() == PlayerObject.WEST:
+		if direction == PlayerObject.NORTH:
+			eyeV[0] += dBack
+		elif direction == PlayerObject.SOUTH:
+			eyeV[0] -= dBack
+		elif direction == PlayerObject.EAST:
+			eyeV[2] += dBack
+		elif direction == PlayerObject.WEST:
+			eyeV[2] -= dBack
 
-					self.setCameraPosition(eyeV, centerV, upV)
+		self.setCameraPosition(eyeV, centerV, upV)
 
 
 	#
@@ -195,26 +184,12 @@ class Engine(object):
 	# 					 looking in.
 	#
 	def setCameraPosition(self, eyeV, centerV, upV):
-		# eyeV[0] = eyeV[0] - self.__camera[0][0]
-		# eyeV[1] = eyeV[1] - self.__camera[0][1]
-		# eyeV[2] = eyeV[2] - self.__camera[0][2]
-		#
-		# center[0] = center[0] - self.__camera[1][0]
-		# center[1] = center[1] - self.__camera[1][1]
-		# center[2] = center[2] - self.__camera[1][2]
-		#
-		# upV[0] = upV[0] - self.__camera[2][0]
-		# upV[1] = upV[1] - self.__camera[2][1]
-		# upV[2] = upV[2] - self.__camera[2][2]
-
-		self.__camera = ((eyeV[0], eyeV[1], eyeV[2]),
-						 (centerV[0], centerV[1], centerV[2]))
 		print("Camera at pos : " +
 			  str(eyeV[0]) + ":" + str(eyeV[1]) + ":" + str(eyeV[2]) + " | " +
 			  str(centerV[0]) + ":" + str(centerV[1]) + ":" + str(centerV[2]))
 
-		gluLookAt(eyeV[0], eyeV[1], eyeV[2],
-				  centerV[0], centerV[1], centerV[2],
+		gluLookAt(eyeV[0] + .5, eyeV[1] + .5, eyeV[2] + .5,
+				  centerV[0] + .5, centerV[1] + .5, centerV[2] + .5,
 				  upV[0], upV[1], upV[2])
 
 

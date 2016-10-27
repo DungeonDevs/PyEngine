@@ -45,7 +45,7 @@ my_map = (
 #--------------------------------------
 
 # create engine object
-engine = Engine((1800, 1000), my_map)
+engine = Engine((400, 400), my_map)
 engine.debug = True # to show axis
 
 # sets the ground under each field where ground needs to be shown
@@ -76,6 +76,7 @@ my_map = (
 engine.setMap(my_map)
 pygame.time.wait(1000)
 engine.render()
+pygame.time.wait(1000)
 
 while True:
 	# TODO: give engine this functionality
@@ -83,4 +84,7 @@ while True:
 		if event.type == pygame.QUIT:
 			pygame.quit()
 
-	pygame.time.wait(10)
+	player.setViewDirection(player.getViewDirection() + 1)
+	engine.render()
+
+	pygame.time.wait(1000)
