@@ -139,11 +139,11 @@ def main():
 	# The colors are now saved in reducedColors
 	#
 
-	output += "ply_to_py_converter_" + name + "_vertices = " +
+	output += "vertices = " +
 				str(reducedVerts) + "\n"
-	output += "ply_to_py_converter_" + name + "_faces = " +
+	output += "faces = " +
 				str(plyFaces) + "\n"
-	output += "ply_to_py_converter_" + name + "_colors = " +
+	output += "colors = " +
 				str(reducedColors) + "\n"
 
 	# write output to .py file
