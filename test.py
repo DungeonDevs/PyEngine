@@ -57,6 +57,23 @@ engine.setGround(ground)
 engine.stopper = False # for debugging
 engine.startUp()
 engine.render()
+
+my_map = (
+	(leftCube, None, None),
+	(None, middleCube, None),
+	(None, None, rightCube),
+	(None, None, None),
+	(None, None, None),
+	(None, None, None),
+	(None, None, None),
+	(None, None, None),
+	(None, None, None),
+	(None, None, None),
+	(None, None, None),
+	(None, player, None),
+	(None, None, None),
+	)
+engine.setMap(my_map)
 pygame.time.wait(1000)
 engine.render()
 

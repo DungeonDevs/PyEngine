@@ -77,7 +77,10 @@ class Engine(object):
 		pygame.init()
 		pygame.display.set_mode(self.__display, DOUBLEBUF|OPENGL)
 
-		# set the perspective
+		# Set projection matrix
+		glMatrixMode(GL_PROJECTION)
+		glLoadIdentity()
+
 		fieldOfView = 45 # degrees
 		aspectRatio = self.__display[0] / self.__display[1]
 		gluPerspective(fieldOfView, aspectRatio, 0.1, 50.0)
@@ -95,12 +98,13 @@ class Engine(object):
 		# Clear OpenGL
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
 
-		# glMatrixMode(GL_PROJECTION)
-		# glLoadIdentity()
+		# set up model-view matrix
+		glMatrixMode(GL_MODELVIEW)
+		glLoadIdentity()
+
 		# set Camera position
 		self.setCamera3rdPerson()
 
-		# glMatrixMode(GL_MODELVIEW)
 		# render the objects in the map and ground where needed
 		self.renderAllObjects()
 
