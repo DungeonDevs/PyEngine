@@ -23,6 +23,8 @@ def main():
 	print("You selected to convert '" + name + "'.")
 	print("The file '" + n_ply + "' will be used.")
 
+	print("Converting file...")
+
 	output = ""
 
 	# -----------------------------------------------------
@@ -98,19 +100,15 @@ def main():
 		for iFace in pair:
 			plyFaces[iFace][4] = iColor
 
-	# note down which vertices exist more than once by index
+	# make list of unique vertices
 	reducedVerts = []
-	# sameVertsList = []
 	for iVert, vert in enumerate(plyVerts):
 		try:
 			iList = reducedVerts.index(vert)
-
 			# vert already in list
-			# sameVertsList[iList].append(iVert)
 		except ValueError:
 			# vert not in list yet
 			reducedVerts.append(vert)
-			# sameVertsList.append([iVert])
 
 	# put reduced vertex index in face
 	for iFace, face in enumerate(plyFaces):
@@ -122,6 +120,14 @@ def main():
 			iNew = reducedVerts.index(vert)
 			# set new index in plyFaces
 			plyFaces[iFace][vertNum] = iNew
+
+
+	# the vertex parts have to be changed, because they are differently
+	# interpreted in OpenGL and MagicaVoxel
+	for i, vert in enumerate(reducedVerts):
+		reducedVerts[i][0] = vert[1]
+		reducedVerts[i][1] = vert[2]
+		reducedVerts[i][2] = vert[0]
 
 
 	# -----------------------------------------------------
@@ -139,12 +145,15 @@ def main():
 	# The colors are now saved in reducedColors
 	#
 
-	output += "vertices = " +
-				str(reducedVerts) + "\n"
-	output += "faces = " +
-				str(plyFaces) + "\n"
-	output += "colors = " +
-				str(reducedColors) + "\n"
+	output += ("vertices = [" +
+				str(reducedVerts)[1:-1].replace("[", "(").replace("]", ")") +
+				"]\n")
+	output += ("faces = [" +
+				str(plyFaces)[1:-1].replace("[", "(").replace("]", ")") +
+				"]\n")
+	output += ("colors = [" +
+				str(reducedColors)[1:-1].replace("[", "(").replace("]", ")") +
+				"]\n")
 
 	# write output to .py file
 	print("Writing '" + n_py + "'...")

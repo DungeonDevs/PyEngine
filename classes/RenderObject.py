@@ -1,4 +1,5 @@
 from OpenGL.GL import *
+import importlib
 
 #
 # A class for all objects that can be rendered into the "world". It saves
@@ -95,6 +96,9 @@ class RenderObject(object):
 		self.__faces    = faces
 		self.__colors   = colors
 
+		self.__scale = 1
+		self.__percentageOffsets = [0, 0, 0]
+
 		self.__groundNecessary = True
 		self.__renderAsEdges   = False
 
@@ -108,6 +112,7 @@ class RenderObject(object):
 	# @param z : The z-coord at which the object shall be rendered
 	#
 	def render(self, x, y, z):
+		print("RenderObject")
 		if self.__renderAsEdges: # the object is set to render only it's edges
 			glBegin(GL_LINES) # set the GL-mode to line-drawing
 
@@ -117,9 +122,8 @@ class RenderObject(object):
 				glColor3fv(self.__colors[edge[2]])
 				edge = edge[:-1]
 				for vertex in edge:
-					glVertex3fv((self.__vertices[vertex][0] + x,
-								 self.__vertices[vertex][1] + y,
-								 self.__vertices[vertex][2] + z))
+					self.__drawVertexAtPosition(self.__vertices[vertex],
+												x, y, z)
 
 			glEnd()
 		else: # the object is set to render only it's faces
@@ -131,11 +135,50 @@ class RenderObject(object):
 				glColor3fv(self.__colors[face[4]])
 				face = face[:-1]
 				for vertex in face:
-					glVertex3fv((self.__vertices[vertex][0] + x,
-								 self.__vertices[vertex][1] + y,
-								 self.__vertices[vertex][2] + z))
+					self.__drawVertexAtPosition(self.__vertices[vertex],
+												x, y, z)
 
 			glEnd()
+
+
+	def __drawVertexAtPosition(self, vertex, x, y, z):
+		print(str(vertex))
+		glVertex3fv((vertex[0] / self.__scale +
+						self.__percentageOffsets[0] + x,
+					 vertex[1] / self.__scale +
+						self.__percentageOffsets[1] + y,
+					 vertex[2] / self.__scale +
+						self.__percentageOffsets[2] + z))
+
+
+	def loadObjectFromPlyToPy(self, name):
+		vertices = []
+		edges = []
+		faces = []
+		colors = []
+
+		varfile = importlib.import_module("resources." + name)
+
+		# print(str(varfile.vertices))
+		# print(str(varfile.faces))
+		# print(str(varfile.colors))
+
+		vertices = varfile.vertices
+		faces    = varfile.faces
+		colors   = varfile.colors
+
+		self.setVertices(vertices)
+		self.setEdges(edges)
+		self.setFaces(faces)
+		self.setColors(colors)
+
+
+	def setScale(self, scale):
+		self.__scale = scale
+
+
+	def setPercentageOffsets(self, offsets):
+		self.__percentageOffsets = offsets
 
 
 	#

@@ -14,7 +14,10 @@ leftCube.setRenderAsEdges()
 
 middleCube = RenderObject()
 middleCube.setGroundNecessary(False)
-middleCube.setRenderAsEdges()
+# middleCube.setRenderAsEdges()
+middleCube.setScale(64)
+middleCube.loadObjectFromPlyToPy("test")
+middleCube.setPercentageOffsets((.5, 0, .5))
 
 rightCube = RenderObject()
 rightCube.setGroundNecessary(False)
@@ -40,7 +43,7 @@ my_map = (
 #--------------------------------------
 
 # create engine object
-engine = Engine((400, 400), my_map)
+engine = Engine((1000, 800), my_map)
 engine.debug = True # to show axis
 
 # sets the ground under each field where ground needs to be shown
