@@ -15,7 +15,7 @@ class RenderObject(object):
 	#
 	# The vertices needed to create a simple cube ( 1 x 1 x 1 )
 	#
-	STANDARD_VERTS = (
+	STANDARD_VERTS = [
 		(1, 0, 0),
 		(1, 1, 0),
 		(0, 1, 0),
@@ -24,14 +24,14 @@ class RenderObject(object):
 		(1, 1, 1),
 		(0, 0, 1),
 		(0, 1, 1)
-		)
+		]
 
 
 	#
 	# The vertex-combinations needed to create the edges of a cube, if the order
 	# from above is used.
 	#
-	STANDARD_EDGES = (
+	STANDARD_EDGES = [
 		(0, 1),
 		(0, 3),
 		(0, 4),
@@ -44,21 +44,21 @@ class RenderObject(object):
 		(5, 1),
 		(5, 4),
 		(5, 7)
-		)
+		]
 
 
 	#
 	# The vertex-combinations needed to create the faces of a cube, if the order
 	# from above is used.
 	#
-	STANDARD_FACES = (
+	STANDARD_FACES = [
 		(0, 1, 2, 3),
 		(3, 2, 7, 6),
 		(6, 7, 5, 4),
 		(4, 5, 1, 0),
 		(1, 5, 7, 2),
 		(4, 0, 3, 6)
-		)
+		]
 
 
 	#

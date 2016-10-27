@@ -22,23 +22,23 @@ class Engine(object):
 	__axis = (
 		# x-axis
 		RenderObject(
-			((-1,0,0), (200,0,0)), # vertices
-			((0,1), (1,0)), # edges (two, because else it isn't correct syntax)
-			(), # no faces
+			[(-1,0,0), (200,0,0)], # vertices
+			[(0,1)], # edges
+			[], # no faces
 			(1,0,0) # color : red
 			),
 		# y-axis
 		RenderObject(
-			((0,-1,0), (0,200,0)), # vertices
-			((0,1), (1,0)), # edges (two, because else it isn't correct syntax)
-			(), # no faces
+			[(0,-1,0), (0,200,0)], # vertices
+			[(0,1)], # edges
+			[], # no faces
 			(0,1,0) # color : green
 			),
 		# z-axis
 		RenderObject(
-			((0,0,-1), (0,0,200)), # vertices
-			((0,1), (1,0)), # edges (two, because else it isn't correct syntax)
-			(), # no faces
+			[(0,0,-1), (0,0,200)], # vertices
+			[(0,1)], # edges
+			[], # no faces
 			(0,0,1) # color : blue
 			)
 		)
