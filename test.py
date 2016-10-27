@@ -34,12 +34,6 @@ my_map = (
 	(None, None, None),
 	(None, None, None),
 	(None, None, None),
-	(None, None, None),
-	(None, None, None),
-	(None, None, None),
-	(None, None, None),
-	(None, None, None),
-	(None, None, None),
 	(None, player, None),
 	)
 #--------------------------------------
@@ -64,12 +58,6 @@ my_map = (
 	(None, None, rightCube),
 	(None, None, None),
 	(None, None, None),
-	(None, None, None),
-	(None, None, None),
-	(None, None, None),
-	(None, None, None),
-	(None, None, None),
-	(None, None, None),
 	(None, player, None),
 	(None, None, None),
 	)
@@ -83,8 +71,5 @@ while True:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			pygame.quit()
-
-	player.setViewDirection(player.getViewDirection() + 1)
-	engine.render()
 
 	pygame.time.wait(1000)

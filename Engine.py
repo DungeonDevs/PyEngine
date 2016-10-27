@@ -102,9 +102,9 @@ class Engine(object):
 
 		# set Camera position
 		# TODO: inefficient - use parameter?
-		for x in range(len(self.__map)):
-			for z in range(len(self.__map[0])):
-				obj = self.__map[x][z]
+		for z in range(len(self.__map)):
+			for x in range(len(self.__map[0])):
+				obj = self.__map[z][x]
 				# print("+1 lookup")
 				if isinstance(obj, PlayerObject):
 					self.setCamera3rdPerson(x, z, obj.getViewDirection())
@@ -126,9 +126,9 @@ class Engine(object):
 	#
 	def renderAllObjects(self):
 		# Display all RenderObjects in the map
-		for x in range(len(self.__map)):
-			for z in range(len(self.__map[0])):
-				obj = self.__map[x][z]
+		for z in range(len(self.__map)):
+			for x in range(len(self.__map[0])):
+				obj = self.__map[z][x]
 				if not obj == None:
 					if obj.getGroundNecessary(): # render ground under object
 												 # if needed - has to be first
@@ -164,13 +164,13 @@ class Engine(object):
 		eyeV[1] += dY
 
 		if direction == PlayerObject.NORTH:
-			eyeV[0] += dBack
-		elif direction == PlayerObject.SOUTH:
-			eyeV[0] -= dBack
-		elif direction == PlayerObject.EAST:
 			eyeV[2] += dBack
-		elif direction == PlayerObject.WEST:
+		elif direction == PlayerObject.EAST:
+			eyeV[0] -= dBack
+		elif direction == PlayerObject.SOUTH:
 			eyeV[2] -= dBack
+		elif direction == PlayerObject.WEST:
+			eyeV[0] += dBack
 
 		self.setCameraPosition(eyeV, centerV, upV)
 
