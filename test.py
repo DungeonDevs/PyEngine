@@ -45,7 +45,7 @@ my_map = (
 #--------------------------------------
 
 # create engine object
-engine = Engine((1800, 1000), my_map)
+engine = Engine((400, 400), my_map)
 engine.debug = True # to show axis
 
 # sets the ground under each field where ground needs to be shown
@@ -54,18 +54,37 @@ ground.setColor((150/255, 75/255, 0))
 engine.setGround(ground)
 
 # start engine and render first screen
+engine.stopper = False # for debugging
 engine.startUp()
 engine.render()
 
-# move this into engine "somehow"
+my_map = (
+	(leftCube, None, None),
+	(None, middleCube, None),
+	(None, None, rightCube),
+	(None, None, None),
+	(None, None, None),
+	(None, None, None),
+	(None, None, None),
+	(None, None, None),
+	(None, None, None),
+	(None, None, None),
+	(None, None, None),
+	(None, player, None),
+	(None, None, None),
+	)
+engine.setMap(my_map)
+pygame.time.wait(1000)
+engine.render()
+pygame.time.wait(1000)
+
 while True:
+	# TODO: give engine this functionality
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			pygame.quit()
 
-	# glRotatef(1, 1, 0, 0) # x
-	# glRotatef(1, 0, 1, 0) # y
-	# glRotatef(1, 0, 0, 1) # z
-	# engine.render()
+	player.setViewDirection(player.getViewDirection() + 1)
+	engine.render()
 
-	pygame.time.wait(10)
+	pygame.time.wait(1000)
