@@ -125,9 +125,9 @@ def main():
 	# the vertex parts have to be changed, because they are differently
 	# interpreted in OpenGL and MagicaVoxel
 	for i, vert in enumerate(reducedVerts):
-		reducedVerts[i][0] = vert[1]
+		reducedVerts[i][0] = vert[0]
 		reducedVerts[i][1] = vert[2]
-		reducedVerts[i][2] = vert[0]
+		reducedVerts[i][2] = vert[1]
 
 
 	# -----------------------------------------------------
