@@ -22,8 +22,9 @@ rightCube.setRenderAsEdges()
 
 # create a player
 player = PlayerObject()
+player.setRenderAsEdges()
 player.setViewDirection(PlayerObject.NORTH)
-player.setColor((100/255, 200/255, 100/255))
+# player.setColors([(100/255, 200/255, 100/255), (1, 1, 1)])
 
 #--------------------------------------
 # create map
@@ -44,7 +45,7 @@ engine.debug = True # to show axis
 
 # sets the ground under each field where ground needs to be shown
 ground = RenderObject()
-ground.setColor((150/255, 75/255, 0))
+# ground.setColors([(150/255, 75/255, 0), (0, 0, 0)])
 engine.setGround(ground)
 
 # start engine and render first screen

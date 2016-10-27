@@ -29,42 +29,50 @@ class RenderObject(object):
 
 	#
 	# The vertex-combinations needed to create the edges of a cube, if the order
-	# from above is used.
+	# from above is used. The last is the color to be used for the edge.
 	#
 	STANDARD_EDGES = [
-		(0, 1),
-		(0, 3),
-		(0, 4),
-		(2, 1),
-		(2, 3),
-		(2, 7),
-		(6, 3),
-		(6, 4),
-		(6, 7),
-		(5, 1),
-		(5, 4),
-		(5, 7)
+		(0, 1, 0),
+		(0, 3, 0),
+		(0, 4, 0),
+		(2, 1, 0),
+		(2, 3, 0),
+		(2, 7, 0),
+		(6, 3, 0),
+		(6, 4, 0),
+		(6, 7, 0),
+		(5, 1, 0),
+		(5, 4, 0),
+		(5, 7, 0)
 		]
 
 
 	#
 	# The vertex-combinations needed to create the faces of a cube, if the order
-	# from above is used.
+	# from above is used. The last is the color to be used for the face.
 	#
 	STANDARD_FACES = [
-		(0, 1, 2, 3),
-		(3, 2, 7, 6),
-		(6, 7, 5, 4),
-		(4, 5, 1, 0),
-		(1, 5, 7, 2),
-		(4, 0, 3, 6)
+		(0, 1, 2, 3, 1),
+		(3, 2, 7, 6, 2),
+		(6, 7, 5, 4, 3),
+		(4, 5, 1, 0, 4),
+		(1, 5, 7, 2, 5),
+		(4, 0, 3, 6, 6)
 		]
 
 
 	#
 	# Some default color to use for the object if not differently defined.
 	#
-	STANDARD_COLOR = ( 156 / 255, 18 / 255, 160 / 255 )
+	STANDARD_COLORS = [
+		(1, 1, 1),
+		(1, 0, 0),
+		(0, 1, 0),
+		(0, 0, 1),
+		(1, 1, 0),
+		(0, 1, 1),
+		(1, 0, 1)
+		]
 
 
 	#
@@ -76,16 +84,16 @@ class RenderObject(object):
 	# 				 this object (default for a cube)
 	# @param faces : the vertex-combinations needed to describe the faces of
 	# 				 this object (default for a cube)
-	# @param color : the color to render this object in.
+	# @param colors : the colors to render this object in.
 	#
 	def __init__(self, vertices = STANDARD_VERTS,
 					   edges    = STANDARD_EDGES,
 					   faces    = STANDARD_FACES,
-					   color    = STANDARD_COLOR):
+					   colors   = STANDARD_COLORS):
 		self.__vertices = vertices
 		self.__edges    = edges
 		self.__faces    = faces
-		self.__color    = color
+		self.__colors   = colors
 
 		self.__groundNecessary = True
 		self.__renderAsEdges   = False
@@ -100,14 +108,14 @@ class RenderObject(object):
 	# @param z : The z-coord at which the object shall be rendered
 	#
 	def render(self, x, y, z):
-		# print("RenderObject at " + str(x) + " : " + str(z))
-
 		if self.__renderAsEdges: # the object is set to render only it's edges
 			glBegin(GL_LINES) # set the GL-mode to line-drawing
 
-			glColor3fv(self.__color) # set the color to draw the lines in
+			# glColor3fv(self.__color) # set the color to draw the lines in
 
 			for edge in self.__edges:
+				glColor3fv(self.__colors[edge[2]])
+				edge = edge[:-1]
 				for vertex in edge:
 					glVertex3fv((self.__vertices[vertex][0] + x,
 								 self.__vertices[vertex][1] + y,
@@ -117,9 +125,11 @@ class RenderObject(object):
 		else: # the object is set to render only it's faces
 			glBegin(GL_QUADS) # set the GL-mode to rectangle-drawing
 
-			glColor3fv(self.__color) # set the color to fill the faces with
+			# glColor3fv(self.__color) # set the color to fill the faces with
 
 			for face in self.__faces:
+				glColor3fv(self.__colors[face[4]])
+				face = face[:-1]
 				for vertex in face:
 					glVertex3fv((self.__vertices[vertex][0] + x,
 								 self.__vertices[vertex][1] + y,
@@ -223,15 +233,15 @@ class RenderObject(object):
 	# A list of numbers in the range of 0 to 1 in form of RGB describing the
 	# color this object is rendered in.
 	#
-	def getColor(self):
-		return self.__color
+	def getColors(self):
+		return self.__colors
 
 
 	#
-	# Set the color this object is rendered in.
+	# Set the colors this object is rendered in.
 	#
-	# @param color : A list of 3 numbers in the range 0 to 1, in order RGB,
-	# 				 describing the color this object shall be rendered in.
+	# @param colors : A list of 3 numbers in the range 0 to 1, in order RGB,
+	# 				  describing the color this object shall be rendered in.
 	#
-	def setColor(self, color):
-		self.__color = color
+	def setColors(self, colors):
+		self.__colors = colors
