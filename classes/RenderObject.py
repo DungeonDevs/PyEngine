@@ -1,5 +1,4 @@
 from OpenGL.GL import *
-import importlib
 
 #
 # A class for all objects that can be rendered into the "world". It saves
@@ -16,7 +15,7 @@ class RenderObject(object):
 	#
 	# The vertices needed to create a simple cube ( 1 x 1 x 1 )
 	#
-	STANDARD_VERTS = [
+	STANDARD_VERTS = (
 		(1, 0, 0),
 		(1, 1, 0),
 		(0, 1, 0),
@@ -25,14 +24,14 @@ class RenderObject(object):
 		(1, 1, 1),
 		(0, 0, 1),
 		(0, 1, 1)
-		]
+		)
 
 
 	#
 	# The vertex-combinations needed to create the edges of a cube, if the order
 	# from above is used. The last is the color to be used for the edge.
 	#
-	STANDARD_EDGES = [
+	STANDARD_EDGES = (
 		(0, 1, 0),
 		(0, 3, 0),
 		(0, 4, 0),
@@ -45,27 +44,27 @@ class RenderObject(object):
 		(5, 1, 0),
 		(5, 4, 0),
 		(5, 7, 0)
-		]
+		)
 
 
 	#
 	# The vertex-combinations needed to create the faces of a cube, if the order
 	# from above is used. The last is the color to be used for the face.
 	#
-	STANDARD_FACES = [
+	STANDARD_FACES = (
 		(0, 1, 2, 3, 1),
 		(3, 2, 7, 6, 2),
 		(6, 7, 5, 4, 3),
 		(4, 5, 1, 0, 4),
 		(1, 5, 7, 2, 5),
 		(4, 0, 3, 6, 6)
-		]
+		)
 
 
 	#
 	# Some default color to use for the object if not differently defined.
 	#
-	STANDARD_COLORS = [
+	STANDARD_COLORS = (
 		(1, 1, 1),
 		(1, 0, 0),
 		(0, 1, 0),
@@ -73,7 +72,7 @@ class RenderObject(object):
 		(1, 1, 0),
 		(0, 1, 1),
 		(1, 0, 1)
-		]
+		)
 
 
 	#
@@ -91,16 +90,16 @@ class RenderObject(object):
 					   edges    = STANDARD_EDGES,
 					   faces    = STANDARD_FACES,
 					   colors   = STANDARD_COLORS):
-		self.__vertices = vertices
-		self.__edges    = edges
-		self.__faces    = faces
-		self.__colors   = colors
+		self.setVertices(vertices)
+		self.setEdges(edges)
+		self.setFaces(faces)
+		self.setColors(colors)
 
-		self.__scale = 1
-		self.__percentageOffsets = [0, 0, 0]
+		self.setScale(1)
+		self.setPercentageOffsets([0, 0, 0])
 
-		self.__groundNecessary = True
-		self.__renderAsEdges   = False
+		self.setGroundNecessary(True)
+		self.setRenderAsEdges(False)
 
 
 	#
@@ -112,73 +111,53 @@ class RenderObject(object):
 	# @param z : The z-coord at which the object shall be rendered
 	#
 	def render(self, x, y, z):
-		print("RenderObject")
 		if self.__renderAsEdges: # the object is set to render only it's edges
 			glBegin(GL_LINES) # set the GL-mode to line-drawing
 
-			# glColor3fv(self.__color) # set the color to draw the lines in
-
-			for edge in self.__edges:
-				glColor3fv(self.__colors[edge[2]])
+			for edge in self.getEdges():
+				glColor3fv(self.getColors()[edge[2]])
 				edge = edge[:-1]
-				for vertex in edge:
-					self.__drawVertexAtPosition(self.__vertices[vertex],
+				for iVertex in edge:
+					self.__drawVertexAtPosition(self.getVertices()[iVertex],
 												x, y, z)
 
 			glEnd()
 		else: # the object is set to render only it's faces
 			glBegin(GL_QUADS) # set the GL-mode to rectangle-drawing
 
-			# glColor3fv(self.__color) # set the color to fill the faces with
-
-			for face in self.__faces:
-				glColor3fv(self.__colors[face[4]])
+			for face in self.getFaces():
+				glColor3fv(self.getColors()[face[4]])
 				face = face[:-1]
-				for vertex in face:
-					self.__drawVertexAtPosition(self.__vertices[vertex],
+				for iVertex in face:
+					self.__drawVertexAtPosition(self.getVertices()[iVertex],
 												x, y, z)
 
 			glEnd()
 
 
 	def __drawVertexAtPosition(self, vertex, x, y, z):
-		print(str(vertex))
 		glVertex3fv((vertex[0] / self.__scale +
-						self.__percentageOffsets[0] + x,
+						self.getPercentageOffsets()[0] + x,
 					 vertex[1] / self.__scale +
-						self.__percentageOffsets[1] + y,
+						self.getPercentageOffsets()[1] + y,
 					 vertex[2] / self.__scale +
-						self.__percentageOffsets[2] + z))
-
-
-	def loadObjectFromPlyToPy(self, name):
-		vertices = []
-		edges = []
-		faces = []
-		colors = []
-
-		varfile = importlib.import_module("resources." + name)
-
-		# print(str(varfile.vertices))
-		# print(str(varfile.faces))
-		# print(str(varfile.colors))
-
-		vertices = varfile.vertices
-		faces    = varfile.faces
-		colors   = varfile.colors
-
-		self.setVertices(vertices)
-		self.setEdges(edges)
-		self.setFaces(faces)
-		self.setColors(colors)
+						self.getPercentageOffsets()[2] + z))
 
 
 	def setScale(self, scale):
 		self.__scale = scale
 
 
+	def getScale(self):
+		return self.__scale
+
+
 	def setPercentageOffsets(self, offsets):
 		self.__percentageOffsets = offsets
+
+
+	def getPercentageOffsets(self):
+		return self.__percentageOffsets
 
 
 	#
@@ -288,3 +267,38 @@ class RenderObject(object):
 	#
 	def setColors(self, colors):
 		self.__colors = colors
+
+
+	@staticmethod
+	def createOneColorCube(color):
+		vertices = (
+			(1, 0, 0),
+			(1, 1, 0),
+			(0, 1, 0),
+			(0, 0, 0),
+			(1, 0, 1),
+			(1, 1, 1),
+			(0, 0, 1),
+			(0, 1, 1))
+		edges = (
+			(0, 1, 0),
+			(0, 3, 0),
+			(0, 4, 0),
+			(2, 1, 0),
+			(2, 3, 0),
+			(2, 7, 0),
+			(6, 3, 0),
+			(6, 4, 0),
+			(6, 7, 0),
+			(5, 1, 0),
+			(5, 4, 0),
+			(5, 7, 0))
+		faces = (
+			(0, 1, 2, 3, 0),
+			(3, 2, 7, 6, 0),
+			(6, 7, 5, 4, 0),
+			(4, 5, 1, 0, 0),
+			(1, 5, 7, 2, 0),
+			(4, 0, 3, 6, 0))
+
+		return RenderObject(vertices, edges, faces, [color])

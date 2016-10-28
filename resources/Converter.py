@@ -63,108 +63,62 @@ def main():
 		# append to face-list
 		plyFaces.append(face)
 
-	# append color to faces
-	for face in plyFaces:
-		face.append(plyVerts[face[0]][1])
+	# find position of cubes
+	cubes = []
+	for num_cube in range(num_faces):
+		cubes.append(plyVerts[plyFaces[num_cube][0]])
 
-	# remove color from vertices
-	for i, vert in enumerate(plyVerts):
-		plyVerts[i] = [vert[0][0],
-						vert[0][1],
-						vert[0][2]]
-
-	# put colors in seperate array and reference them in faces
 	allColors = []
-	for face in plyFaces:
+	for cube in cubes:
 		# convert 0-255 to 0-1
-		face[4][0] = float(face[4][0]) / 255 # red
-		face[4][1] = float(face[4][1]) / 255 # green
-		face[4][2] = float(face[4][2]) / 255 # blue
+		cube[1][0] = float(cube[1][0]) / 255 # red
+		cube[1][1] = float(cube[1][1]) / 255 # green
+		cube[1][2] = float(cube[1][2]) / 255 # blue
 
-		allColors.append(face[4])
-		face[4] = len(allColors) - 1 # last index - the just added color
+		allColors.append(cube[1])
+		cube[1] = len(allColors) - 1 # last index - the just added color
 
 	# save each unique color only once and save all indizes that refer to that
 	# color in a seperate array
 	reducedColors = []
-	faceColorPairs = []
-	for iFace, color in enumerate(allColors):
+	cubeColorPairs = []
+	for iCube, color in enumerate(allColors):
 		try:
 			iReduced = reducedColors.index(color)
 
 			# color exists already
-			faceColorPairs[iReduced].append(iFace)
+			cubeColorPairs[iReduced].append(iCube)
 		except ValueError:
 			# color does not exist yet
 			reducedColors.append(color)
-			faceColorPairs.append([iFace])
+			cubeColorPairs.append([iCube])
 
 
 	# put index of color in face, not color itself
-	for iColor, pair in enumerate(faceColorPairs):
-		for iFace in pair:
-			plyFaces[iFace][4] = iColor
+	for iColor, pair in enumerate(cubeColorPairs):
+		for iCube in pair:
+			cubes[iCube][1] = iColor
 
-	# make list of unique vertices
-	reducedVerts = []
-	for iVert, vert in enumerate(plyVerts):
-		try:
-			iList = reducedVerts.index(vert)
-			# vert already in list
-		except ValueError:
-			# vert not in list yet
-			reducedVerts.append(vert)
-
-	# put reduced vertex index in face
-	for iFace, face in enumerate(plyFaces):
-		# do this for each vertex in face - remember, the last is color
-		for vertNum in range(4):
-			# get vertex by old index
-			vert = plyVerts[face[vertNum]]
-			# get new index by vert
-			iNew = reducedVerts.index(vert)
-			# set new index in plyFaces
-			plyFaces[iFace][vertNum] = iNew
-
-
-	# the vertex parts have to be changed, because they are differently
-	# interpreted in OpenGL and MagicaVoxel
-	# for i, vert in enumerate(reducedVerts):
-	# 	reducedVerts[i][0] = vert[0]
-	# 	reducedVerts[i][1] = vert[1]
-	# 	reducedVerts[i][2] = vert[2]
-
+	for iCube, cube in enumerate(cubes):
+		cubes[iCube] = [
+			cube[0][0],
+			cube[0][1],
+			cube[0][2],
+			cube[1],
+			]
 
 	# -----------------------------------------------------
 
-	# test-outputs
-	# output += "\n".join(map(str, plyVerts))
-	# output += "\n".join(map(str, allColors))
-	# output += "\n".join(map(str, reducedColors))
-	# output += str(faceColorIndexPairs)
-	# output += "\n".join(map(str, plyFaces))
-
-	#
-	# The vertices are now saved in reducedVerts
-	# The faces are now saved in plyFaces
-	# The colors are now saved in reducedColors
-	#
-
-	output += ("vertices = [" +
-				str(reducedVerts)[1:-1].replace("[", "(").replace("]", ")") +
-				"]\n")
-	output += ("faces = [" +
-				str(plyFaces)[1:-1].replace("[", "(").replace("]", ")") +
-				"]\n")
-	output += ("colors = [" +
-				str(reducedColors)[1:-1].replace("[", "(").replace("]", ")") +
-				"]\n")
+	output += "cubes = [\n\t"
+	output += ",\n\t".join(map(str, cubes))
+	output += "]\n\ncolors = [\n\t"
+	output += ",\n\t".join(map(str, reducedColors))
+	output += "]"
 
 	# write output to .py file
 	print("Writing '" + n_py + "'...")
 	f_py = open(n_py, 'w')
 	f_py.write(output)
 	print("Done.")
-
 
 main()
