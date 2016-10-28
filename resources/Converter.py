@@ -76,6 +76,11 @@ def main():
 	# put colors in seperate array and reference them in faces
 	allColors = []
 	for face in plyFaces:
+		# convert 0-255 to 0-1
+		face[4][0] = float(face[4][0]) / 255 # red
+		face[4][1] = float(face[4][1]) / 255 # green
+		face[4][2] = float(face[4][2]) / 255 # blue
+
 		allColors.append(face[4])
 		face[4] = len(allColors) - 1 # last index - the just added color
 
@@ -124,10 +129,10 @@ def main():
 
 	# the vertex parts have to be changed, because they are differently
 	# interpreted in OpenGL and MagicaVoxel
-	for i, vert in enumerate(reducedVerts):
-		reducedVerts[i][0] = vert[0]
-		reducedVerts[i][1] = vert[2]
-		reducedVerts[i][2] = vert[1]
+	# for i, vert in enumerate(reducedVerts):
+	# 	reducedVerts[i][0] = vert[0]
+	# 	reducedVerts[i][1] = vert[1]
+	# 	reducedVerts[i][2] = vert[2]
 
 
 	# -----------------------------------------------------

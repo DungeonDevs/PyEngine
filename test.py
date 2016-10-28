@@ -43,7 +43,7 @@ my_map = (
 #--------------------------------------
 
 # create engine object
-engine = Engine((1000, 800), my_map)
+engine = Engine((800, 600), my_map)
 engine.debug = True # to show axis
 
 # sets the ground under each field where ground needs to be shown
@@ -54,21 +54,37 @@ engine.setGround(ground)
 # start engine and render first screen
 engine.stopper = False # for debugging
 engine.startUp()
-engine.render()
+
+# engine.render()
+# my_map = (
+# 	(leftCube, None, None),
+# 	(None, middleCube, None),
+# 	(None, None, rightCube),
+# 	(None, None, None),
+# 	(None, None, None),
+# 	(None, player, None),
+# 	(None, None, None),
+# 	)
+# engine.setMap(my_map)
+# pygame.time.wait(1000)
+# engine.render()
+# pygame.time.wait(1000)
+
+loadedObj = RenderObject()
+# loadedObj.setGroundNecessary(False)
+loadedObj.setScale(64)
+loadedObj.loadObjectFromPlyToPy("test")
+loadedObj.setPercentageOffsets((.5, .5, 0))
+
+player.setViewDirection(PlayerObject.NORTH)
 
 my_map = (
-	(leftCube, None, None),
-	(None, middleCube, None),
-	(None, None, rightCube),
-	(None, None, None),
-	(None, None, None),
-	(None, player, None),
-	(None, None, None),
+	(loadedObj,),
+	(player,)
 	)
+
 engine.setMap(my_map)
-pygame.time.wait(1000)
 engine.render()
-pygame.time.wait(1000)
 
 while True:
 	# TODO: give engine this functionality

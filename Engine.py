@@ -86,6 +86,20 @@ class Engine(object):
 		# things in the back are covered by things in front of them
 		glEnable(GL_DEPTH_TEST)
 
+		# LIGHT
+		# 
+		# glEnable(GL_LIGHTING)
+		# glEnable(GL_COLOR_MATERIAL)
+		#
+		# lightAmbient = [ 0.5, 0, 0, 0.5 ]
+		# lightDiffuse = [ 1, 1, 1, 0.5 ]
+		# lightPosition = [0,0,3,1]
+		#
+		# glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient)
+		# glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse)
+		# glLightfv(GL_LIGHT0, GL_POSITION, lightPosition)
+		# glEnable(GL_LIGHT0)
+
 
 	#
 	# This function renders the current map with the RenderObject it contains
