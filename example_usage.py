@@ -26,7 +26,7 @@ cube3.setRenderAsEdges()
 # -------------------------------------------
 # create object from file
 loadedObj = LoadedObject("resources.block", 16)
-loadedObj.setPercentageOffsets((.5, 0, -.5))
+loadedObj.setOffsets((.5, 0, -.5))
 # loadedObj.setScale(2)
 
 # -------------------------------------------

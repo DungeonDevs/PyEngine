@@ -110,7 +110,7 @@ class RenderObject(object):
 		self.setNormals(normals)
 
 		self.setScale(1)
-		self.setPercentageOffsets([0, 0, 0])
+		self.setOffsets([0, 0, 0])
 
 		self.setGroundNecessary(True)
 		self.setRenderAsEdges(False)
@@ -161,11 +161,11 @@ class RenderObject(object):
 	def __drawVertexAtPosition(self, vertex, x, y, z):
 		drawVert = [0,0,0]
 		drawVert[0] = (vertex[0] / self.__scale +
-						self.getPercentageOffsets()[0] + x)
+						self.getOffsets()[0] + x)
 		drawVert[1] = (vertex[1] / self.__scale +
-						self.getPercentageOffsets()[1] + y)
+						self.getOffsets()[1] + y)
 		drawVert[2] = (vertex[2] / self.__scale +
-						self.getPercentageOffsets()[2] + z)
+						self.getOffsets()[2] + z)
 
 		glVertex3fv(drawVert)
 
@@ -183,11 +183,11 @@ class RenderObject(object):
 	def __drawVertexNormalAtPosition(self, vertex, normal, x, y, z):
 		drawVert = [0,0,0]
 		drawVert[0] = (vertex[0] / self.__scale +
-						self.getPercentageOffsets()[0] + x)
+						self.getOffsets()[0] + x)
 		drawVert[1] = (vertex[1] / self.__scale +
-						self.getPercentageOffsets()[1] + y)
+						self.getOffsets()[1] + y)
 		drawVert[2] = (vertex[2] / self.__scale +
-						self.getPercentageOffsets()[2] + z)
+						self.getOffsets()[2] + z)
 
 		glNormal3fv(normal)
 		glVertex3fv(drawVert)
