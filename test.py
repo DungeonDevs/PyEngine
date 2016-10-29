@@ -9,7 +9,7 @@ import pygame
 # create a player
 player = PlayerObject()
 player.setRenderAsEdges()
-player.setViewDirection(PlayerObject.NORTH)
+player.setViewDirection(PlayerObject.EAST)
 # player.setColors([(100/255, 200/255, 100/255), (1, 1, 1)])
 
 # -------------------------------------------
@@ -34,14 +34,14 @@ cube3.setRenderAsEdges()
 
 # -------------------------------------------
 # create object from file
-loadedObj = LoadedObject("test", 64)
-loadedObj.setPercentageOffsets((.5, .5, 0))
+loadedObj = LoadedObject("block", 16)
+loadedObj.setPercentageOffsets((.5, 0, -.5))
 # loadedObj.setScale(2)
 
 # -------------------------------------------
 # create engine object
 engine = Engine((1500, 1000))
-engine.debug = True # to show axis
+# engine.debug = True # to show axis
 
 # -------------------------------------------
 # set ground
@@ -54,14 +54,45 @@ engine.startUp()
 # -------------------------------------------
 # create map
 my_map = (
-	(loadedObj, None, cube1, cube2, cube3),
-	(player, None, None, None, None, None)
+	(None, None, None, cube1, cube2, cube3),
+	(loadedObj, None, None, None, None, None)
 	)
 
 # -------------------------------------------
 # render map
 engine.setMap(my_map)
+engine.setPlayerPosInfo(0, 1, PlayerObject.NORTH)
 engine.render()
+
+# pygame.time.wait(1000)
+#
+# # -------------------------------------------
+# # create map
+# my_map = (
+# 	(None, loadedObj, None, cube1, cube2, cube3),
+# 	(None, player, None, None, None, None, None)
+# 	)
+#
+# # -------------------------------------------
+# # render map
+# engine.setMap(my_map)
+# engine.render()
+#
+# pygame.time.wait(1000)
+#
+# # -------------------------------------------
+# # create map
+# my_map = (
+# 	(None, loadedObj, None, cube1, cube2, cube3),
+# 	(None, None, player, None, None, None, None)
+# 	)
+#
+# # -------------------------------------------
+# # render map
+# engine.setMap(my_map)
+# engine.render()
+
+
 
 # -------------------------------------------
 # keep program alive until close-event

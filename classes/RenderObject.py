@@ -60,6 +60,15 @@ class RenderObject(object):
 		(4, 0, 3, 6, 6)
 		)
 
+	STANDARD_NORMALS = (
+		(0, 0, -1),
+		(-1, 0, 0),
+		(0, 0, 1),
+		(1, 0, 0),
+		(0, 1, 0),
+		(0, -1, 0)
+		)
+
 
 	#
 	# Some default color to use for the object if not differently defined.
@@ -89,11 +98,13 @@ class RenderObject(object):
 	def __init__(self, vertices = STANDARD_VERTS,
 					   edges    = STANDARD_EDGES,
 					   faces    = STANDARD_FACES,
-					   colors   = STANDARD_COLORS):
+					   colors   = STANDARD_COLORS,
+					   normals  = STANDARD_NORMALS):
 		self.setVertices(vertices)
 		self.setEdges(edges)
 		self.setFaces(faces)
 		self.setColors(colors)
+		self.setNormals(normals)
 
 		self.setScale(1)
 		self.setPercentageOffsets([0, 0, 0])
@@ -125,23 +136,41 @@ class RenderObject(object):
 		else: # the object is set to render only it's faces
 			glBegin(GL_QUADS) # set the GL-mode to rectangle-drawing
 
-			for face in self.getFaces():
+			for iFace, face in enumerate(self.getFaces()):
 				glColor3fv(self.getColors()[face[4]])
 				face = face[:-1]
 				for iVertex in face:
-					self.__drawVertexAtPosition(self.getVertices()[iVertex],
-												x, y, z)
+					self.__drawVertexNormalAtPosition(
+						self.getVertices()[iVertex],
+						self.getNormals()[iFace],
+						x, y, z)
 
 			glEnd()
 
 
 	def __drawVertexAtPosition(self, vertex, x, y, z):
-		glVertex3fv((vertex[0] / self.__scale +
-						self.getPercentageOffsets()[0] + x,
-					 vertex[1] / self.__scale +
-						self.getPercentageOffsets()[1] + y,
-					 vertex[2] / self.__scale +
-						self.getPercentageOffsets()[2] + z))
+		drawVert = [0,0,0]
+		drawVert[0] = (vertex[0] / self.__scale +
+						self.getPercentageOffsets()[0] + x)
+		drawVert[1] = (vertex[1] / self.__scale +
+						self.getPercentageOffsets()[1] + y)
+		drawVert[2] = (vertex[2] / self.__scale +
+						self.getPercentageOffsets()[2] + z)
+
+		glVertex3fv(drawVert)
+
+
+	def __drawVertexNormalAtPosition(self, vertex, normal, x, y, z):
+		drawVert = [0,0,0]
+		drawVert[0] = (vertex[0] / self.__scale +
+						self.getPercentageOffsets()[0] + x)
+		drawVert[1] = (vertex[1] / self.__scale +
+						self.getPercentageOffsets()[1] + y)
+		drawVert[2] = (vertex[2] / self.__scale +
+						self.getPercentageOffsets()[2] + z)
+
+		glNormal3fv(normal)
+		glVertex3fv(drawVert)
 
 
 	def setScale(self, scale):
@@ -267,6 +296,14 @@ class RenderObject(object):
 	#
 	def setColors(self, colors):
 		self.__colors = colors
+
+
+	def getNormals(self):
+		return self.__normals
+
+
+	def setNormals(self, normals):
+		self.__normals = normals
 
 
 	@staticmethod

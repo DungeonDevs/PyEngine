@@ -86,19 +86,23 @@ class Engine(object):
 		# things in the back are covered by things in front of them
 		glEnable(GL_DEPTH_TEST)
 
-		# LIGHT
-		# 
-		# glEnable(GL_LIGHTING)
-		# glEnable(GL_COLOR_MATERIAL)
-		#
-		# lightAmbient = [ 0.5, 0, 0, 0.5 ]
-		# lightDiffuse = [ 1, 1, 1, 0.5 ]
-		# lightPosition = [0,0,3,1]
-		#
-		# glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient)
-		# glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse)
-		# glLightfv(GL_LIGHT0, GL_POSITION, lightPosition)
-		# glEnable(GL_LIGHT0)
+		# enable light - we need light to be able to make the environment look
+		# somewhat natural and 3D-understandable
+		glEnable(GL_LIGHTING)
+
+		# materials for lighting
+		glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
+			# change both ambient and diffuse lighting with glColor
+		glEnable(GL_COLOR_MATERIAL)
+
+		# enable light source 0
+		glEnable(GL_LIGHT0)
+
+		# set up light source 0
+		glLight(GL_LIGHT0, GL_AMBIENT, (.1, .1, .1, .1))
+		glLight(GL_LIGHT0, GL_DIFFUSE, (.5, .5, .5,  1))
+
+		glLight(GL_LIGHT0, GL_POSITION, (100, 100, 100))
 
 
 	#
@@ -115,13 +119,15 @@ class Engine(object):
 		glLoadIdentity()
 
 		# set Camera position
-		# TODO: inefficient - use parameter?
-		for z in range(len(self.__map)):
-			for x in range(len(self.__map[0])):
-				obj = self.__map[z][x]
-				# print("+1 lookup")
-				if isinstance(obj, PlayerObject):
-					self.setCamera3rdPerson(x, z, obj.getViewDirection())
+		# # TODO: inefficient - use parameter?
+		# for z in range(len(self.__map)):
+		# 	for x in range(len(self.__map[0])):
+		# 		obj = self.__map[z][x]
+		# 		# print("+1 lookup")
+		# 		if isinstance(obj, PlayerObject):
+		# 			self.setCamera3rdPerson(x, z, obj.getViewDirection())
+		pos = self.getPlayerPosInfo()
+		self.setCamera3rdPerson(pos[0], pos[1], pos[2])
 
 		# render the objects in the map and ground where needed
 		self.renderAllObjects()
@@ -133,6 +139,14 @@ class Engine(object):
 		#
 		# pygame.display.update()
 		pygame.display.flip()
+
+
+	def getPlayerPosInfo(self):
+		return self.__playerPosInfo
+
+
+	def setPlayerPosInfo(self, x, z, direction):
+		self.__playerPosInfo = [x, z, direction]
 
 
 	#
@@ -201,6 +215,13 @@ class Engine(object):
 		print("Camera at pos : " +
 			  str(eyeV[0]) + ":" + str(eyeV[1]) + ":" + str(eyeV[2]) + " | " +
 			  str(centerV[0]) + ":" + str(centerV[1]) + ":" + str(centerV[2]))
+
+		# # set light over head
+		# lightV = [0,0,0]
+		# lightV[0] = eyeV[0]
+		# lightV[1] = eyeV[1] + 1
+		# lightV[2] = eyeV[2]
+		# glLight(GL_LIGHT0, GL_POSITION, lightV)
 
 		gluLookAt(eyeV[0] + .5, eyeV[1] + .5, eyeV[2] + .5,
 				  centerV[0] + .5, centerV[1] + .5, centerV[2] + .5,

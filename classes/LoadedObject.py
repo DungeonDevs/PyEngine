@@ -15,14 +15,11 @@ class LoadedObject(object):
 
 
 	def render(self, x, y, z):
-		print("Render LoadedObject")
 		for obj in self.__renderObjects:
-			print(" - Render RenderObject")
 			offsets = self.getPercentageOffsets()
 			pos = [x + offsets[0],
 				   y + offsets[1],
 				   z + offsets[2]]
-			print(" -  - at pos: " + str(pos))
 			obj.render(pos[0],
 					   pos[1],
 					   pos[2])
@@ -82,21 +79,13 @@ class LoadedObject(object):
 		cubes  = varfile.cubes
 		colors = varfile.colors
 
-		print("cubes: " + str(cubes))
-		print("colors: " + str(colors))
-
 		self.__renderObjects = []
 		for cube in cubes:
-			print("adding cube to list")
 			c_obj = RenderObject.createOneColorCube(colors[cube[3]])
 			c_obj.setScale(self.getScale())
-			print("with color " + str(colors[cube[3]]))
 			offsets = [float(cube[0]) / self.getScale(),
 					   float(cube[1]) / self.getScale(),
 					   float(cube[2]) / self.getScale()]
 			c_obj.setPercentageOffsets(offsets)
-			print("With offsets" + str(offsets))
 
 			self.__renderObjects.append(c_obj)
-			print("\n")
-		print("Done with all cubes")
