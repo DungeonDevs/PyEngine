@@ -7,3 +7,5 @@ It is based on:
 - PyGame
 
 Make sure you have these installed to run. (preferably with pip)
+
+## Example usage
