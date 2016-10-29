@@ -1,49 +1,72 @@
 from Engine import *
 from classes.RenderObject import *
 from classes.PlayerObject import *
+from classes.LoadedObject import *
 
 import pygame
 
-# start code
-
-leftCube = RenderObject()
-leftCube.setGroundNecessary(False)
-
-middleCube = RenderObject()
-middleCube.setGroundNecessary(False)
-
-rightCube = RenderObject()
-rightCube.setGroundNecessary(False)
-
+# -------------------------------------------
+# create a player
 player = PlayerObject()
+player.setRenderAsEdges()
+player.setViewDirection(PlayerObject.NORTH)
+# player.setColors([(100/255, 200/255, 100/255), (1, 1, 1)])
 
-my_map = (
-	(None, None, None),
-	(leftCube, middleCube, rightCube),
-	(None, player, None)
-	)
-
-engine = Engine((1000, 400), my_map)
-
-# sets the ground under each field where ground needs to be shown
+# -------------------------------------------
+# create a ground
 ground = RenderObject()
+# ground.setColors([(150/255, 75/255, 0), (0, 0, 0)])
+
+# -------------------------------------------
+# create three cubes
+
+cube1 = RenderObject()
+cube1.setGroundNecessary(False)
+cube1.setRenderAsEdges()
+
+cube2 = RenderObject()
+cube2.setGroundNecessary(False)
+cube2.setRenderAsEdges()
+
+cube3 = RenderObject()
+cube3.setGroundNecessary(False)
+cube3.setRenderAsEdges()
+
+# -------------------------------------------
+# create object from file
+loadedObj = LoadedObject("test", 64)
+loadedObj.setPercentageOffsets((.5, .5, 0))
+# loadedObj.setScale(2)
+
+# -------------------------------------------
+# create engine object
+engine = Engine((1500, 1000))
+engine.debug = True # to show axis
+
+# -------------------------------------------
+# set ground
 engine.setGround(ground)
 
+# -------------------------------------------
+# start engine
 engine.startUp()
 
-engine.render()
-
+# -------------------------------------------
+# create map
 my_map = (
-	(leftCube, None, None),
-	(None, middleCube, None),
-	(None, player, rightCube)
+	(loadedObj, None, cube1, cube2, cube3),
+	(player, None, None, None, None, None)
 	)
-engine.setMap(my_map)
 
+# -------------------------------------------
+# render map
+engine.setMap(my_map)
 engine.render()
 
-# move this into engine "somehow"
+# -------------------------------------------
+# keep program alive until close-event
 while True:
+	# TODO: give engine this functionality
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			pygame.quit()
