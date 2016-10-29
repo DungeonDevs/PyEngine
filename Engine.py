@@ -204,14 +204,17 @@ class Engine(object):
 		direction = Direction.validate(direction)
 
 		# deltas to the players location to move the camera away
-		dY = .5
-		dBack = 1
+		dY = .1
+		dBack = .5
+		dLookatup = -.1
 
 		# initialize vars
 		playerV = [x,0,z] # player position
 		eyeV    = playerV[:] # cam position (moving it starts at the player)
 		centerV = playerV[:] # lookat point (is player)
 		upV     = [0,1,0] # up vector
+
+		centerV[1] += dLookatup
 
 		eyeV[1] += dY
 
@@ -237,10 +240,6 @@ class Engine(object):
 	# @param upV : The up-vector from the camera. Mostly [0, 1, 0]. [x, y, z]
 	#
 	def setCameraPosition(self, eyeV, centerV, upV):
-		print("Camera at pos : " +
-			  str(eyeV[0]) + ":" + str(eyeV[1]) + ":" + str(eyeV[2]) + " | " +
-			  str(centerV[0]) + ":" + str(centerV[1]) + ":" + str(centerV[2]))
-
 		gluLookAt(eyeV[0] + .5, eyeV[1] + .5, eyeV[2] + .5,
 				  centerV[0] + .5, centerV[1] + .5, centerV[2] + .5,
 				  upV[0], upV[1], upV[2])
