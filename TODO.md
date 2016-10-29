@@ -1,1 +1,0 @@
-- save position inside the object => render Objects beside the tiles (Items etc.)
