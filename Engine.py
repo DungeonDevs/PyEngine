@@ -8,13 +8,14 @@ from classes.RenderObject import *
 
 #
 # A helper class to handle directions.
-#
+#TODO: Sync this direction Vaules with the ones used in the main game
+#Files to edit: entitys.py; Game.py
 class Direction(object):
 
-	NORTH = 0
-	EAST  = 1
-	SOUTH = 2
-	WEST  = 3
+	NORTH = 3
+	EAST  = 2
+	SOUTH = 1
+	WEST  = 0
 
 	#
 	# Turns a possibly invalid direction into a valid one
