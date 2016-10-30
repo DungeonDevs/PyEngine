@@ -1,21 +1,12 @@
-from Engine import *
-from classes.RenderObject import *
-from classes.PlayerObject import *
-from classes.LoadedObject import *
+from Engine import Engine, Direction
+from classes.RenderObject import RenderObject
+from classes.LoadedObject import LoadedObject
 
 import pygame
 
 # -------------------------------------------
-# create a player
-player = PlayerObject()
-player.setRenderAsEdges()
-player.setViewDirection(PlayerObject.NORTH)
-# player.setColors([(100/255, 200/255, 100/255), (1, 1, 1)])
-
-# -------------------------------------------
 # create a ground
-ground = RenderObject()
-# ground.setColors([(150/255, 75/255, 0), (0, 0, 0)])
+ground = RenderObject.createOneColorCube((150/255, 75/255, 0))
 
 # -------------------------------------------
 # create three cubes
@@ -34,14 +25,14 @@ cube3.setRenderAsEdges()
 
 # -------------------------------------------
 # create object from file
-loadedObj = LoadedObject("test", 64)
-loadedObj.setPercentageOffsets((.5, .5, 0))
+loadedObj = LoadedObject("resources.block", 16)
+loadedObj.setOffsets((.5, 0, -.5))
 # loadedObj.setScale(2)
 
 # -------------------------------------------
 # create engine object
 engine = Engine((1500, 1000))
-engine.debug = True # to show axis
+# engine.debug = True # to show axis
 
 # -------------------------------------------
 # set ground
@@ -54,13 +45,14 @@ engine.startUp()
 # -------------------------------------------
 # create map
 my_map = (
-	(loadedObj, None, cube1, cube2, cube3),
-	(player, None, None, None, None, None)
+	(None, None, None, cube1, cube2, cube3),
+	(loadedObj, None, None, None, None, None)
 	)
 
 # -------------------------------------------
 # render map
 engine.setMap(my_map)
+engine.setPlayerPosInfo(0, 1, Direction.EAST)
 engine.render()
 
 # -------------------------------------------
@@ -71,4 +63,4 @@ while True:
 		if event.type == pygame.QUIT:
 			pygame.quit()
 
-	pygame.time.wait(100)
+	pygame.time.wait(1000)
