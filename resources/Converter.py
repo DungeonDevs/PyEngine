@@ -1,26 +1,27 @@
 def main():
 	# read file
-	ppf = PlyPyFile("block")
+	ppf = PlyPyFile("heroes/angrygrandma", "resources/originals/", "resources/")
+	print("getting data")
 	verts, colors, faces = ppf.getData()
-
+	print("making verts positive ints")
 	verts = makeVertsPositiveInts(verts)
-
+	print("minimizing colors")
 	verts, colors = minimizeColors(verts, colors)
-
+	print("moving color indices to faces")
 	verts, faces = moveColorIndexToFace(verts, faces)
-
+	print("minimizing verts")
 	verts, faces = minimizeVerts(verts, faces)
-
+	print("splitting faces")
 	(leftFaces, rightFaces, bottomFaces,
 		topFaces, backFaces, frontFaces) = splitFaces(verts, faces)
-
+	print("creating cubes from faces")
 	cubesLeft   = cubesFromFaces( verts, "left",   leftFaces   )
 	cubesRight  = cubesFromFaces( verts, "right",  rightFaces  )
 	cubesBottom = cubesFromFaces( verts, "bottom", bottomFaces )
 	cubesTop    = cubesFromFaces( verts, "top",    topFaces    )
 	cubesBack   = cubesFromFaces( verts, "back",   backFaces   )
 	cubesFront  = cubesFromFaces( verts, "front",  frontFaces  )
-
+	print("merging cube lists")
 	cubes = mergeCubeListsMinimized([
 				cubesLeft,
 				cubesRight,
@@ -28,14 +29,15 @@ def main():
 				cubesTop,
 				cubesBack,
 				cubesFront])
-
+	print("turning object")
 	cubes = turnObjectX(cubes)
-
+	print("adding output")
 	ppf.out("cubes = " + str(cubes))
 	ppf.out("colors = " + str(colors))
-
+	print("writing file")
 	# write file
 	ppf.write()
+	print("done")
 
 
 def turnObjectX(cubes):
