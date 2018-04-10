@@ -1,6 +1,6 @@
 def main():
 	# read file
-	ppf = PlyPyFile("heroes/angrygrandma", "resources/originals/", "resources/")
+	ppf = PlyPyFile("Items/Slime", "resources/originals/", "resources/")
 	print("getting data")
 	verts, colors, faces = ppf.getData()
 	print("making verts positive ints")
